@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card p-4">
+                <h2 class="text-center mb-4"><i class="bi bi-ui-checks me-2 text-primary"></i>Form Kebutuhan Pengguna</h2>
+                <hr>
+                <form action="{{ url_for('main.rekomendasi') }}" method="POST">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Tujuan Penggunaan</label>
+                        <select name="tujuan" class="form-select" required>
+                            <option value="" disabled selected>Pilih Tujuan...</option>
+                            <option value="Kuliah">Kuliah</option>
+                            <option value="Programming">Programming</option>
+                            <option value="Kantoran">Kantoran</option>
+                            <option value="Desain Grafis">Desain Grafis</option>
+                            <option value="Editing Video">Editing Video</option>
+                            <option value="Gaming">Gaming</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Budget Maksimal</label>
+                        <select name="budget" class="form-select" required>
+                            <option value="" disabled selected>Pilih Budget...</option>
+                            <option value="< 5 juta">< 5 Juta</option>
+                            <option value="5 - 8 juta">5 - 8 Juta</option>
+                            <option value="8 - 12 juta">8 - 12 Juta</option>
+                            <option value="> 12 juta">> 12 Juta</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Tingkat Mobilitas (Sering dibawa bepergian?)</label>
+                        <select name="mobilitas" class="form-select" required>
+                            <option value="Sedang" selected>Sedang</option>
+                            <option value="Tinggi">Tinggi (Cari yang ringan)</option>
+                            <option value="Rendah">Rendah (Berat tidak masalah)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Tingkat Multitasking (Buka banyak aplikasi bersamaan?)</label>
+                        <select name="multitasking" class="form-select" required>
+                            <option value="Sedang" selected>Sedang</option>
+                            <option value="Berat">Berat (Butuh RAM Besar)</option>
+                            <option value="Ringan">Ringan (RAM Standar cukup)</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-5">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Proses Rekomendasi <i class="bi bi-cpu ms-2"></i>
+                        </button>
+                        <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">Batal</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

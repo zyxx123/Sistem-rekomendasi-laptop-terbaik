@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="card p-4">
+        <h2 class="mb-4 text-center"><i class="bi bi-clock-history me-2 text-primary"></i>Riwayat Rekomendasi</h2>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Tujuan</th>
+                        <th>Budget</th>
+                        <th>Mobilitas</th>
+                        <th>Multitasking</th>
+                        <th>Laptop Terpilih</th>
+                        <th>Nilai SAW</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in histories %}
+                    <tr>
+                        <td>{{ h.tanggal.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ h.tujuan }}</td>
+                        <td>{{ h.budget }}</td>
+                        <td>{{ h.mobilitas }}</td>
+                        <td>{{ h.multitasking }}</td>
+                        <td class="fw-bold text-primary">{{ h.laptop_terpilih }}</td>
+                        <td><span class="badge bg-success">{{ h.nilai_saw }}</span></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">Belum ada riwayat rekomendasi.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Dashboard Admin</h2>
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1">Total Laptop</h6>
+                        <h2 class="mb-0">{{ total_laptop }}</h2>
+                    </div>
+                    <i class="bi bi-laptop" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1">Total Rekomendasi</h6>
+                        <h2 class="mb-0">{{ total_rekomendasi }}</h2>
+                    </div>
+                    <i class="bi bi-graph-up-arrow" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1">Paling Direkomendasi</h6>
+                        <h4 class="mb-0">{{ best_laptop.laptop_terpilih if best_laptop else '-' }}</h4>
+                        <small>{{ best_laptop.total if best_laptop else 0 }} kali</small>
+                    </div>
+                    <i class="bi bi-star-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card p-4">
+                <h4>Menu Navigasi Admin</h4>
+                <div class="list-group mt-3">
+                    <a href="{{ url_for('admin.laptop_index') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-laptop me-2"></i> Kelola Data Laptop
+                    </a>
+                    <a href="{{ url_for('admin.kriteria_index') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-list-check me-2"></i> Kelola Kriteria SAW
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

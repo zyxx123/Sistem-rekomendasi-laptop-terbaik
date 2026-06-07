@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center mb-5">
+        <h2 class="display-6 fw-bold">Hasil Rekomendasi Laptop</h2>
+        <p class="text-muted">Berdasarkan perhitungan metode Simple Additive Weighting (SAW)</p>
+    </div>
+
+    <!-- Profil Pengguna & Bobot -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100 p-4">
+                <h4><i class="bi bi-person-circle me-2 text-primary"></i>Profil Kebutuhan</h4>
+                <hr>
+                <div class="row">
+                    <div class="col-6 text-muted">Tujuan:</div>
+                    <div class="col-6 fw-bold text-end">{{ user_profile.tujuan }}</div>
+                    <div class="col-6 text-muted">Budget:</div>
+                    <div class="col-6 fw-bold text-end">{{ user_profile.budget }}</div>
+                    <div class="col-6 text-muted">Mobilitas:</div>
+                    <div class="col-6 fw-bold text-end">{{ user_profile.mobilitas }}</div>
+                    <div class="col-6 text-muted">Multitasking:</div>
+                    <div class="col-6 fw-bold text-end">{{ user_profile.multitasking }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 p-4">
+                <h4><i class="bi bi-sliders me-2 text-primary"></i>Bobot Kriteria</h4>
+                <hr>
+                {% for key, val in weights.items() %}
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-capitalize">{{ key }}</span>
+                        <span>{{ (val * 100)|round|int }}%</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar" role="progressbar" style="width: {{ val * 100 }}%"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Rekomendasi Terbaik -->
+    <div class="card border-primary border-3 mb-5 overflow-hidden">
+        <div class="row g-0">
+            <div class="col-md-4 bg-primary d-flex align-items-center justify-content-center p-4">
+                <i class="bi bi-trophy text-white" style="font-size: 8rem;"></i>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body p-4">
+                    <h5 class="card-title text-primary fw-bold">REKOMENDASI TERBAIK</h5>
+                    <h2 class="display-5 fw-bold">{{ best.nama_laptop }}</h2>
+                    <p class="fs-4">Nilai SAW: <span class="badge bg-success">{{ best.nilai_saw }}</span></p>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        Laptop ini direkomendasikan karena memiliki kombinasi harga, kapasitas RAM, SSD, performa prosesor, dan berat yang paling sesuai dengan kebutuhan pengguna berdasarkan pembobotan yang telah disesuaikan.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Perhitungan (Accordions) -->
+    <div class="accordion mb-5" id="calculationAccordion">
+        <div class="accordion-item card border-0 shadow-none">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                    <i class="bi bi-table me-2"></i> Matriks Normalisasi
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#calculationAccordion">
+                <div class="accordion-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Laptop</th>
+                                    <th>C1 (Harga)</th>
+                                    <th>C2 (RAM)</th>
+                                    <th>C3 (SSD)</th>
+                                    <th>C4 (Proc)</th>
+                                    <th>C5 (Berat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in normalized_matrix %}
+                                <tr>
+                                    <td>{{ row.nama_laptop }}</td>
+                                    <td>{{ row.scores.harga|round(4) }}</td>
+                                    <td>{{ row.scores.ram|round(4) }}</td>
+                                    <td>{{ row.scores.ssd|round(4) }}</td>
+                                    <td>{{ row.scores.processor_score|round(4) }}</td>
+                                    <td>{{ row.scores.berat|round(4) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item card border-0 shadow-none mt-3">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                    <i class="bi bi-calculator me-2"></i> Perhitungan Nilai Preferensi (Vi)
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#calculationAccordion">
+                <div class="accordion-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Laptop</th>
+                                    <th>Perhitungan (Wj * Rij)</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in ranking %}
+                                <tr>
+                                    <td>{{ item.nama_laptop }}</td>
+                                    <td class="small">
+                                        {% for key, detail in item.detail.items() %}
+                                        ({{ weights[key] }} * {{ detail.normalized|round(2) }}) {% if not loop.last %} + {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="fw-bold">{{ item.nilai_saw }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabel Ranking -->
+    <div class="card p-4">
+        <h4 class="mb-4"><i class="bi bi-list-ol me-2 text-primary"></i>Peringkat Keseluruhan</h4>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Ranking</th>
+                        <th>Laptop</th>
+                        <th>Nilai SAW</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in ranking %}
+                    <tr class="{% if loop.first %}table-primary fw-bold{% endif %}">
+                        <td>{{ loop.index }}</td>
+                        <td>{{ item.nama_laptop }}</td>
+                        <td>{{ item.nilai_saw }}</td>
+                        <td>
+                            {% if loop.first %}
+                            <span class="badge bg-primary">Rekomendasi Utama</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Alternatif {{ loop.index }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{{ url_for('main.rekomendasi') }}" class="btn btn-primary btn-lg">Ulangi Rekomendasi</a>
+        <a href="{{ url_for('main.riwayat') }}" class="btn btn-outline-secondary btn-lg">Lihat Riwayat</a>
+    </div>
+</div>
+{% endblock %}

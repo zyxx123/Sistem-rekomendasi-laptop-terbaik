@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Pilih Laptop Terbaik Anda</h1>
+        <p class="lead">Sistem Pendukung Keputusan Pemilihan Laptop dengan Metode Simple Additive Weighting (SAW).</p>
+        <a href="{{ url_for('main.rekomendasi') }}" class="btn btn-light btn-lg px-5 mt-3">
+            Mulai Rekomendasi <i class="bi bi-arrow-right ms-2"></i>
+        </a>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100 p-4">
+                <h3>Apa itu SPK?</h3>
+                <p>Sistem Pendukung Keputusan (SPK) adalah sistem berbasis komputer yang membantu pengambilan keputusan untuk menyelesaikan masalah tertentu dengan menggunakan data dan model tertentu.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 p-4">
+                <h3>Metode SAW</h3>
+                <p>Simple Additive Weighting (SAW) sering juga dikenal istilah metode penjumlahan terbobot. Konsep dasar metode SAW adalah mencari penjumlahan terbobot dari rating kinerja pada setiap alternatif pada semua atribut.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 text-center">
+        <h2 class="mb-4">Kriteria yang Dipertimbangkan</h2>
+        <div class="row row-cols-2 row-cols-md-5 g-3">
+            <div class="col">
+                <div class="card p-3">
+                    <i class="bi bi-tag-fill h1 text-primary"></i>
+                    <h5>Harga</h5>
+                    <small class="text-muted">Cost</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3">
+                    <i class="bi bi-memory h1 text-primary"></i>
+                    <h5>RAM</h5>
+                    <small class="text-muted">Benefit</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3">
+                    <i class="bi bi-hdd-fill h1 text-primary"></i>
+                    <h5>SSD</h5>
+                    <small class="text-muted">Benefit</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3">
+                    <i class="bi bi-cpu-fill h1 text-primary"></i>
+                    <h5>Processor</h5>
+                    <small class="text-muted">Benefit</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3">
+                    <i class="bi bi-briefcase-fill h1 text-primary"></i>
+                    <h5>Berat</h5>
+                    <small class="text-muted">Cost</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

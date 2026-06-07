@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Kelola Kriteria SAW</h2>
+    <div class="card p-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Kode</th>
+                        <th>Nama Kriteria</th>
+                        <th>Atribut</th>
+                        <th>Bobot Dasar</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in criteria %}
+                    <tr>
+                        <td>{{ c.kode }}</td>
+                        <td>{{ c.nama }}</td>
+                        <td>
+                            <span class="badge {{ 'bg-danger' if c.atribut == 'cost' else 'bg-success' }}">
+                                {{ c.atribut|capitalize }}
+                            </span>
+                        </td>
+                        <td>{{ c.bobot_dasar }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.kriteria_edit', id=c.id) }}" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="alert alert-warning mt-3">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <strong>Catatan:</strong> Bobot dasar digunakan sebagai referensi awal. Sistem akan menyesuaikan bobot secara dinamis berdasarkan input kebutuhan pengguna di halaman rekomendasi.
+        </div>
+    </div>
+</div>
+{% endblock %}

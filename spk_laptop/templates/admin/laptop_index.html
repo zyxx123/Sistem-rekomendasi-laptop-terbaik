@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Kelola Data Laptop</h2>
+        <a href="{{ url_for('admin.laptop_add') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i> Tambah Laptop
+        </a>
+    </div>
+
+    <div class="card p-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Kode</th>
+                        <th>Nama Laptop</th>
+                        <th>Harga</th>
+                        <th>RAM</th>
+                        <th>SSD</th>
+                        <th>Proc Score</th>
+                        <th>Berat</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for l in laptops %}
+                    <tr>
+                        <td>{{ l.kode }}</td>
+                        <td>{{ l.nama_laptop }}</td>
+                        <td>Rp {{ "{:,.0f}".format(l.harga) }}</td>
+                        <td>{{ l.ram }} GB</td>
+                        <td>{{ l.ssd }} GB</td>
+                        <td>{{ l.processor_score }}</td>
+                        <td>{{ l.berat }} kg</td>
+                        <td>
+                            <a href="{{ url_for('admin.laptop_edit', id=l.id) }}" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a href="{{ url_for('admin.laptop_delete', id=l.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Hapus data ini?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
