@@ -26,7 +26,22 @@ def rekomendasi():
         weights = get_weights_by_needs(tujuan, mobilitas, multitasking)
         
         # 2. Ambil data Laptop & Kriteria
-        laptops = Laptop.query.all()
+        query = Laptop.query
+        
+        if budget == '< 5 juta':
+            query = query.filter(Laptop.harga < 5000000)
+        elif budget == '5 - 8 juta':
+            query = query.filter(Laptop.harga >= 5000000, Laptop.harga <= 8000000)
+        elif budget == '8 - 12 juta':
+            query = query.filter(Laptop.harga > 8000000, Laptop.harga <= 12000000)
+        elif budget == '> 12 juta':
+            query = query.filter(Laptop.harga > 12000000)
+            
+        laptops = query.all()
+        
+        if not laptops:
+            laptops = Laptop.query.all() # Fallback jika kosong
+            
         criteria_list = Criteria.query.all()
         
         # Mapping criteria untuk SAW
