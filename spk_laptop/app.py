@@ -1,8 +1,10 @@
 import os
 from flask import Flask, render_template, redirect, url_for
-from models import db, Laptop, Criteria, RecommendationHistory
+from models import db, Laptop, Criteria, RecommendationHistory, User
 from routes.main import main_bp
 from routes.admin import admin_bp
+from routes.auth import auth_bp
+from werkzeug.security import generate_password_hash
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,6 +19,7 @@ def create_app():
     # Register Blueprints
     app.register_blueprint(main_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
     with app.app_context():
         db.create_all()
@@ -25,6 +28,12 @@ def create_app():
     return app
 
 def seed_data():
+    if User.query.first() is None:
+        admin = User(username='admin', password=generate_password_hash('admin'), role='admin')
+        user = User(username='user', password=generate_password_hash('user'), role='user')
+        db.session.add_all([admin, user])
+        db.session.commit()
+
     if Laptop.query.first() is None:
         # Dummy Laptop Data
         laptops = [

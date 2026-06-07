@@ -48,6 +48,12 @@
         .dark-mode .navbar {
             background-color: #1e1e1e !important;
         }
+        .dark-mode footer.bg-light {
+            background-color: #1e1e1e !important;
+        }
+        .dark-mode .text-muted {
+            color: #b0b0b0 !important;
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -62,6 +68,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    {% if session.get('user_id') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
                     </li>
@@ -71,9 +78,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.riwayat') }}">Riwayat</a>
                     </li>
+                    {% if session.get('role') == 'admin' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('admin.dashboard') }}">Admin</a>
                     </li>
+                    {% endif %}
+                    
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="{{ url_for('auth.logout') }}">Logout</a>
+                    </li>
+                    {% endif %}
+                    
                     <li class="nav-item ms-lg-3">
                         <button class="btn btn-outline-light btn-sm mt-1" id="darkModeToggle">
                             <i class="bi bi-moon-stars"></i>

@@ -1,8 +1,14 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from models import db, Laptop, Criteria, RecommendationHistory
 from sqlalchemy import func
 
 admin_bp = Blueprint('admin', __name__)
+
+@admin_bp.before_request
+def check_admin():
+    if session.get('role') != 'admin':
+        flash('Anda tidak memiliki akses ke halaman admin', 'danger')
+        return redirect(url_for('auth.login'))
 
 @admin_bp.route('/')
 def dashboard():

@@ -1,9 +1,14 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from models import db, Laptop, Criteria, RecommendationHistory
 from saw import SAW, get_weights_by_needs
 from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
+
+@main_bp.before_request
+def require_login():
+    if 'user_id' not in session:
+        return redirect(url_for('auth.login'))
 
 @main_bp.route('/')
 def index():
