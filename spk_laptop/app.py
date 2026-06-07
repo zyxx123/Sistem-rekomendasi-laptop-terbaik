@@ -35,14 +35,48 @@ def seed_data():
         db.session.commit()
 
     if Laptop.query.first() is None:
-        # Dummy Laptop Data
-        laptops = [
-            Laptop(kode='A1', nama_laptop='ASUS Vivobook 14', harga=7500000, ram=8, ssd=512, processor_score=80, berat=1.4),
-            Laptop(kode='A2', nama_laptop='Lenovo IdeaPad Slim 3', harga=6200000, ram=8, ssd=256, processor_score=75, berat=1.5),
-            Laptop(kode='A3', nama_laptop='Acer Aspire 5', harga=8500000, ram=16, ssd=512, processor_score=85, berat=1.6),
-            Laptop(kode='A4', nama_laptop='HP 14s', harga=5800000, ram=4, ssd=256, processor_score=70, berat=1.45),
-            Laptop(kode='A5', nama_laptop='Dell Inspiron 14', harga=11000000, ram=16, ssd=512, processor_score=90, berat=1.4),
-        ]
+        import csv
+        laptops = []
+        csv_path = os.path.join(basedir, 'laptop.csv')
+        if os.path.exists(csv_path):
+            with open(csv_path, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for idx, row in enumerate(reader, 1):
+                    try:
+                        price = float(row.get('price', 0) or 0) * 190
+                        ram = int(row.get('ram(GB)', 0) or 0)
+                        ssd = int(row.get('ssd(GB)', 0) or 0) + int(row.get('Hard Disk(GB)', 0) or 0)
+                        score = int(row.get('spec_score', 0) or 0)
+                        
+                        screen = row.get('screen_size(inches)', '')
+                        try:
+                            screen_size = float(screen)
+                            berat = round(1.0 + (screen_size - 13.0) * 0.15, 2)
+                        except:
+                            berat = 1.5
+                            
+                        berat = max(1.0, min(3.0, berat))
+                        
+                        if price <= 0 or ram <= 0 or score <= 0:
+                            continue
+                            
+                        laptops.append(Laptop(
+                            kode=f'L{idx}',
+                            nama_laptop=row.get('model_name', f'Laptop {idx}'),
+                            harga=price,
+                            ram=ram,
+                            ssd=ssd,
+                            processor_score=score,
+                            berat=berat
+                        ))
+                    except Exception:
+                        continue
+        
+        if not laptops:
+            # Fallback
+            laptops = [
+                Laptop(kode='A1', nama_laptop='ASUS Vivobook 14', harga=7500000, ram=8, ssd=512, processor_score=80, berat=1.4)
+            ]
         db.session.bulk_save_objects(laptops)
         
         # Criteria Data
